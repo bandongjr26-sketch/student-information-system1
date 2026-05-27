@@ -164,7 +164,9 @@ $(document).ready(function () {
     }
 
     function setupAddDegreeAjax() {
-        $('#saveDegree').on('click', function () {
+        $('#addDegreeForm').on('submit', function (event) {
+            event.preventDefault();
+
             $.post(window.addDegreeRoutes.store, {
                 degree_title: $('#degree_title').val()
             })
@@ -179,7 +181,9 @@ $(document).ready(function () {
     }
 
     function setupEditDegreeAjax() {
-        $('#updateDegree').on('click', function () {
+        $('#editDegreeForm').on('submit', function (event) {
+            event.preventDefault();
+
             const degreeId = $('#degree_id').val();
 
             $.post(`${window.editDegreeRoutes.base}/${degreeId}`, {
@@ -345,7 +349,9 @@ $(document).ready(function () {
     }
 
     function setupEditStudentAjax() {
-        $('#updateStudent').on('click', function () {
+        $('#editStudentForm').on('submit', function (event) {
+            event.preventDefault();
+
             const studentId = $('#student_id').val();
             const data = getStudentData();
 
@@ -367,7 +373,9 @@ $(document).ready(function () {
     }
 
     function setupAddTeacherAjax() {
-        $('#saveTeacher').on('click', function () {
+        $('#addTeacherForm').on('submit', function (event) {
+            event.preventDefault();
+
             const password = $('#teacher_password').val();
             const passwordConfirmation = $('#teacher_password_confirmation').val();
 
@@ -397,7 +405,9 @@ $(document).ready(function () {
     }
 
     function setupChangePasswordAjax() {
-        $('#changePasswordBtn').on('click', function () {
+        $('#changePasswordForm').on('submit', function (event) {
+            event.preventDefault();
+
             const newPassword = $('#change_new_password').val();
             const newPasswordConfirmation = $('#change_new_password_confirmation').val();
 

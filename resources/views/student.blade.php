@@ -50,14 +50,3 @@ Welcome, {{ $user }}!<br>
 
 {{ $students->links() }}
 @endsection
-
-@push('scripts')
-<script>
-    window.studentRoutes = {
-        index: "{{ route('students.index') }}",
-        base: "{{ url('students') }}"
-    };
-</script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"></script>
-@endpush
