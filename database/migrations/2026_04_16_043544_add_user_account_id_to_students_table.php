@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('students', 'user_account_id')) {
+            return;
+        }
+
         Schema::table('students', function (Blueprint $table) {
             $table->foreignId('user_account_id')->nullable()->constrained('user_accounts')->after('degree_id');
         });
@@ -21,6 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasColumn('students', 'user_account_id')) {
+            return;
+        }
+
         Schema::table('students', function (Blueprint $table) {
             $table->dropConstrainedForeignId('user_account_id');
         });

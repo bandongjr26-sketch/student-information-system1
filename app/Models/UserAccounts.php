@@ -25,6 +25,14 @@ class UserAccounts extends Authenticatable
         'remember_token',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+            'must_change_password' => 'boolean',
+        ];
+    }
+
     public function student()
     {
         return $this->hasOne(Student::class, 'user_account_id', 'id');
