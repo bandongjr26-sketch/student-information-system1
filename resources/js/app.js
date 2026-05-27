@@ -257,12 +257,14 @@ $(document).ready(function () {
     function renderStudents(students) {
         const rows = students.map(function (student) {
             const fullName = `${student.lname}, ${student.mname ?? ''}, ${student.fname}`;
+            const username = student.user_account?.username ?? 'N/A';
             const email = student.user_account?.email ?? 'N/A';
             const degree = student.degree?.degree_title ?? 'N/A';
 
             return `
                 <tr>
                     <td>${escapeHtml(fullName)}</td>
+                    <td>${escapeHtml(username)}</td>
                     <td>${escapeHtml(email)}</td>
                     <td>${escapeHtml(student.contactno)}</td>
                     <td>${escapeHtml(degree)}</td>
@@ -276,7 +278,7 @@ $(document).ready(function () {
         });
 
         $('#student-table-body').html(
-            rows.length ? rows.join('') : '<tr><td colspan="5" class="text-center">No students found</td></tr>'
+            rows.length ? rows.join('') : '<tr><td colspan="6" class="text-center">No students found</td></tr>'
         );
 
         $('#student-list-status').text(`Last table update: ${new Date().toLocaleTimeString()}`);

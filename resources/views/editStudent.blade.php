@@ -41,7 +41,7 @@
             <div class="text-center mb-4">
                 <div class="mb-3" style="max-width: 400px; margin: 0 auto;">
                     <label class="form-label fw-bold">Contact Number</label>
-                    <input type="tel" id="contact_no" name="contactno" class="form-control styled-input" value="{{ old('contactno', $student->contactno) }}">
+                    <input type="tel" id="contact_no" name="contactno" class="form-control styled-input" value="{{ old('contactno', $student->contactno) }}" inputmode="numeric" pattern="[0-9]{11}" maxlength="11">
                 </div>
             </div>
             <div class="text-center mb-4">

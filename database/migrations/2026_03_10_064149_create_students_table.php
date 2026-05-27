@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('mname');
             $table->string('lname');
             $table->string('email');
-            $table->integer('contactno');
+            $table->string('contactno', 11);
             $table->unsignedBigInteger('degree_id');
             $table->foreign('degree_id')->references('id')->on('degrees')->onDelete('cascade');
             $table->timestamps();

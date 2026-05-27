@@ -61,6 +61,9 @@ class StudentController extends Controller
          'degree_id' => 'required|exists:degrees,id',
          'username' => 'required|min:8',
          'password' => 'required|confirmed|min:8',
+    ], [
+        'contactno.required' => 'Contact number is required.',
+        'contactno.digits' => 'Contact number must be exactly 11 digits.',
     ]);
 
    $user = UserAccounts::create([
@@ -140,7 +143,9 @@ Student::create([
         $validated = $request->validate($rules, [
             'current_password.required_with' => 'Current password is required when changing password.',
             'new_password.confirmed' => 'New passwords do not match.',
-            'email.unique' => 'Email already exists.'
+            'email.unique' => 'Email already exists.',
+            'contactno.required' => 'Contact number is required.',
+            'contactno.digits' => 'Contact number must be exactly 11 digits.'
         ]);
 
         // Update student details

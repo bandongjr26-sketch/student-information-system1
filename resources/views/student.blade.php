@@ -17,6 +17,7 @@ Welcome, {{ $user }}!<br>
     <thead class="table-primary">
         <tr>
             <td>Full Name</td>
+            <td>Username</td>
             <td>Email</td>
             <td>Contact Number</td> 
             <td>Degree</td>
@@ -27,6 +28,7 @@ Welcome, {{ $user }}!<br>
         @forelse($students as $student)
             <tr>
                 <td>{{ $student->lname }}, {{ $student->mname }}, {{ $student->fname }}</td>
+                <td>{{ $student->userAccount->username ?? 'N/A' }}</td>
                 <td>{{ $student->userAccount->email ?? 'N/A' }}</td>
                 <td>{{ $student->contactno }}</td>
                 <td>{{ $student->degree->degree_title ?? 'N/A' }}</td>
@@ -42,7 +44,7 @@ Welcome, {{ $user }}!<br>
             </tr>
         @empty
             <tr>
-                <td colspan="5" class="text-center">No students found</td>
+                <td colspan="6" class="text-center">No students found</td>
             </tr>
         @endforelse
     </tbody>
