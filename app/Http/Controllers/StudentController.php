@@ -204,4 +204,5 @@ Student::create([
 
         return redirect()->route('students.index');
     }
+
 }
