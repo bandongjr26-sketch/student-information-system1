@@ -245,7 +245,7 @@ $(document).ready(function () {
     function loadStudents(showError = true) {
         $.get(window.studentRoutes.index)
             .done(function (response) {
-                renderStudents(response.students);
+                renderStudentAccounts(response.studentAccounts);
             })
             .fail(function () {
                 if (showError) {
@@ -254,8 +254,9 @@ $(document).ready(function () {
             });
     }
 
-    function renderStudents(students) {
-        const rows = students.map(function (student) {
+    function renderStudentAccounts(studentAccounts) {
+        const rows = studentAccounts.map(function (studentAccount) {
+            const student = studentAccount.student;
             const fullName = `${student.lname}, ${student.mname ?? ''}, ${student.fname}`;
             const degree = student.degree?.degree_title ?? 'N/A';
             const actions = `

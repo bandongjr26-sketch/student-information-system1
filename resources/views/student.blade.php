@@ -23,7 +23,8 @@ Welcome, {{ $user }}!<br>
         </tr>
     </thead>
     <tbody id="student-table-body">
-        @forelse($students as $student)
+        @forelse($studentAccounts as $studentAccount)
+            @php($student = $studentAccount->student)
             <tr>
                 <td>{{ $student->lname }}, {{ $student->mname }}, {{ $student->fname }}</td>
                 <td>{{ $student->contactno }}</td>
@@ -46,5 +47,5 @@ Welcome, {{ $user }}!<br>
     </tbody>
 </table>
 
-{{ $students->links() }}
+{{ $studentAccounts->links() }}
 @endsection
