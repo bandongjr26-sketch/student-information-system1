@@ -245,7 +245,7 @@ $(document).ready(function () {
     function loadStudents(showError = true) {
         $.get(window.studentRoutes.index)
             .done(function (response) {
-                renderStudentAccounts(response.studentAccounts);
+                renderStudents(response.students);
             })
             .fail(function () {
                 if (showError) {
@@ -254,23 +254,20 @@ $(document).ready(function () {
             });
     }
 
-    function renderStudentAccounts(studentAccounts) {
-        const rows = studentAccounts.map(function (studentAccount) {
-            const student = studentAccount.student;
-            const fullName = student ? `${student.lname}, ${student.mname ?? ''}, ${student.fname}` : 'N/A';
-            const degree = student?.degree?.degree_title ?? 'N/A';
-            const actions = student ? `
+    function renderStudents(students) {
+        const rows = students.map(function (student) {
+            const fullName = `${student.lname}, ${student.mname ?? ''}, ${student.fname}`;
+            const degree = student.degree?.degree_title ?? 'N/A';
+            const actions = `
                         <a href="${window.studentRoutes.base}/${student.id}" class="btn btn-info btn-sm me-1">View</a>
                         <a href="${window.studentRoutes.base}/${student.id}/edit" class="btn btn-warning btn-sm me-1">Edit</a>
                         <button type="button" class="btn btn-danger btn-sm delete-student" data-id="${student.id}">Delete</button>
-                    ` : '<span class="text-muted">No student profile</span>';
+                    `;
 
             return `
                 <tr>
                     <td>${escapeHtml(fullName)}</td>
-                    <td>${escapeHtml(studentAccount.username)}</td>
-                    <td>${escapeHtml(studentAccount.email)}</td>
-                    <td>${escapeHtml(student?.contactno ?? 'N/A')}</td>
+                    <td>${escapeHtml(student.contactno)}</td>
                     <td>${escapeHtml(degree)}</td>
                     <td>${actions}</td>
                 </tr>
@@ -278,7 +275,7 @@ $(document).ready(function () {
         });
 
         $('#student-table-body').html(
-            rows.length ? rows.join('') : '<tr><td colspan="6" class="text-center">No students found</td></tr>'
+            rows.length ? rows.join('') : '<tr><td colspan="4" class="text-center">No students found</td></tr>'
         );
 
         $('#student-list-status').text(`Last table update: ${new Date().toLocaleTimeString()}`);
