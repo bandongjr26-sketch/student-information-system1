@@ -17,6 +17,7 @@ Welcome, {{ $user }}!<br>
     <thead class="table-primary">
         <tr>
             <td>Full Name</td>
+            <td>Email</td>
             <td>Contact Number</td> 
             <td>Degree</td>
             <td>Actions</td>
@@ -28,11 +29,12 @@ Welcome, {{ $user }}!<br>
             <tr>
                 <td>
                     @if($student)
-                        {{ $student->lname }}, {{ $student->mname }}, {{ $student->fname }}
+                        {{ collect([$student->lname, $student->mname, $student->fname])->filter()->join(', ') }}
                     @else
                         {{ $studentAccount->username }}
                     @endif
                 </td>
+                <td>{{ $studentAccount->email ?? 'N/A' }}</td>
                 <td>{{ $student->contactno ?? 'N/A' }}</td>
                 <td>{{ $student->degree->degree_title ?? 'N/A' }}</td>
                 <td>
@@ -51,7 +53,7 @@ Welcome, {{ $user }}!<br>
             </tr>
         @empty
             <tr>
-                <td colspan="4" class="text-center">No students found</td>
+                <td colspan="5" class="text-center">No students found</td>
             </tr>
         @endforelse
     </tbody>
