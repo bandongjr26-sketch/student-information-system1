@@ -17,6 +17,10 @@ Route::get('/greetings',[StudentController::class, 'displayHomePage']);
 Route::get('/studentpage',[StudentController::class, 'displayStudentPage']);
      Route::get('/aboutUs',[StudentController::class, 'displayAboutUs']);
 
+     Route::get('/db-test', function () {
+    return DB::connection()->getDatabaseName();
+});
+
     
 
 Route::match(['get', 'post'], '/', [UserController::class, 'login'])->Middleware('maintenance');
