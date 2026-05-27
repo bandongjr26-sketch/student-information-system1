@@ -10,7 +10,7 @@ if [ -z "$APP_KEY" ] && ! grep -q '^APP_KEY=base64:' .env; then
 fi
 
 php artisan config:clear
-php artisan migrate --force
-php artisan db:seed --force
+php artisan migrate --force || echo "Migration failed; starting app so logs are visible."
+php artisan db:seed --force || echo "Seeding failed; starting app so logs are visible."
 
 php artisan serve --host=0.0.0.0 --port="${PORT:-10000}"
