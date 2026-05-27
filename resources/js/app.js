@@ -322,7 +322,9 @@ $(document).ready(function () {
     }
 
     function setupAddStudentAjax() {
-        $('#saveStudent').on('click', function () {
+        $('#addStudentForm').on('submit', function (event) {
+            event.preventDefault();
+
             const data = getStudentData();
 
             if (data.password !== data.password_confirmation || data.password === '') {
