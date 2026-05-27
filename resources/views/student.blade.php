@@ -26,17 +26,27 @@ Welcome, {{ $user }}!<br>
         @forelse($studentAccounts as $studentAccount)
             @php($student = $studentAccount->student)
             <tr>
-                <td>{{ $student->lname }}, {{ $student->mname }}, {{ $student->fname }}</td>
-                <td>{{ $student->contactno }}</td>
+                <td>
+                    @if($student)
+                        {{ $student->lname }}, {{ $student->mname }}, {{ $student->fname }}
+                    @else
+                        {{ $studentAccount->username }}
+                    @endif
+                </td>
+                <td>{{ $student->contactno ?? 'N/A' }}</td>
                 <td>{{ $student->degree->degree_title ?? 'N/A' }}</td>
                 <td>
-                    <a href="{{ route('students.show', $student) }}" class="btn btn-info btn-sm me-1">View</a>
-                    <a href="{{ route('students.edit', $student) }}" class="btn btn-warning btn-sm me-1">Edit</a>
-                    <form method="POST" action="{{ route('students.destroy', $student) }}" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
-                    </form>
+                    @if($student)
+                        <a href="{{ route('students.show', $student) }}" class="btn btn-info btn-sm me-1">View</a>
+                        <a href="{{ route('students.edit', $student) }}" class="btn btn-warning btn-sm me-1">Edit</a>
+                        <form method="POST" action="{{ route('students.destroy', $student) }}" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
+                        </form>
+                    @else
+                        <span class="text-muted">No student profile</span>
+                    @endif
                 </td>
             </tr>
         @empty

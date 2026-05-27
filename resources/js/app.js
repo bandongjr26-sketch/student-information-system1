@@ -22,17 +22,7 @@ $(document).ready(function () {
         setupEditDegreeAjax();
     }
 
-    if (window.studentRoutes) {
-        setupStudentListAjax();
-    }
-
-    if (window.addStudentRoutes) {
-        setupAddStudentAjax();
-    }
-
-    if (window.editStudentRoutes) {
-        setupEditStudentAjax();
-    }
+    // Student pages use normal Laravel requests so they work reliably on hosted servers.
 
     if (window.addTeacherRoutes) {
         setupAddTeacherAjax();

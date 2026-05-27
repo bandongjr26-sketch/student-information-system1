@@ -32,21 +32,8 @@ class StudentController extends Controller
 
     public function index()
     {
-        if (request()->ajax()) {
-            $studentAccounts = UserAccounts::with(['student.degree'])
-                ->where('role', 'student')
-                ->whereHas('student')
-                ->orderBy('id', 'desc')
-                ->get();
-
-            return response()->json([
-                'studentAccounts' => $studentAccounts
-            ]);
-        }
-
         $studentAccounts = UserAccounts::with(['student.degree'])
             ->where('role', 'student')
-            ->whereHas('student')
             ->orderBy('id', 'desc')
             ->paginate(5);
         $user = session('logged_user');
