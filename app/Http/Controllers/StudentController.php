@@ -8,6 +8,7 @@ use App\Models\UserAccounts;
 use App\Models\Degree;
 use Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -32,16 +33,22 @@ class StudentController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $students = Student::with(['userAccount', 'degree'])->orderBy('id', 'desc')->get();
+            $studentAccounts = UserAccounts::with(['student.degree'])
+                ->where('role', 'student')
+                ->orderBy('id', 'desc')
+                ->get();
 
             return response()->json([
-                'students' => $students
+                'studentAccounts' => $studentAccounts
             ]);
         }
 
-        $students = Student::with(['userAccount', 'degree'])->orderBy('id', 'desc')->paginate(5);
+        $studentAccounts = UserAccounts::with(['student.degree'])
+            ->where('role', 'student')
+            ->orderBy('id', 'desc')
+            ->paginate(5);
         $user = session('logged_user');
-        return view('student')->with("students",$students)->with('user', $user);
+        return view('student')->with('studentAccounts', $studentAccounts)->with('user', $user);
     }
 
     public function create()
@@ -188,7 +195,17 @@ Student::create([
 
     public function destroy(string $id)
     {
-        Student::destroy($id);
+        $student = Student::with('userAccount')->findOrFail($id);
+
+        DB::transaction(function () use ($student) {
+            $userAccount = $student->userAccount;
+
+            $student->delete();
+
+            if ($userAccount) {
+                $userAccount->delete();
+            }
+        });
 
         if (request()->ajax()) {
             return response()->json([
