@@ -39,7 +39,7 @@ class StudentController extends Controller
             ]);
         }
 
-        $students = Student::paginate(5);
+        $students = Student::with(['userAccount', 'degree'])->orderBy('id', 'desc')->paginate(5);
         $user = session('logged_user');
         return view('student')->with("students",$students)->with('user', $user);
     }

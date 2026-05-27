@@ -24,11 +24,31 @@ Welcome, {{ $user }}!<br>
         </tr>
     </thead>
     <tbody id="student-table-body">
-        <tr>
-            <td colspan="5" class="text-center">Loading students...</td>
-        </tr>
+        @forelse($students as $student)
+            <tr>
+                <td>{{ $student->lname }}, {{ $student->mname }}, {{ $student->fname }}</td>
+                <td>{{ $student->userAccount->email ?? 'N/A' }}</td>
+                <td>{{ $student->contactno }}</td>
+                <td>{{ $student->degree->degree_title ?? 'N/A' }}</td>
+                <td>
+                    <a href="{{ route('students.show', $student) }}" class="btn btn-info btn-sm me-1">View</a>
+                    <a href="{{ route('students.edit', $student) }}" class="btn btn-warning btn-sm me-1">Edit</a>
+                    <form method="POST" action="{{ route('students.destroy', $student) }}" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" class="text-center">No students found</td>
+            </tr>
+        @endforelse
     </tbody>
 </table>
+
+{{ $students->links() }}
 @endsection
 
 @push('scripts')
