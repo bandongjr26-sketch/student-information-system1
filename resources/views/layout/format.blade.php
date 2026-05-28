@@ -23,7 +23,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('students.index') }}">Student List</a>
+                        <a class="nav-link" href="{{ route('student-accounts.index') }}">Student List</a>
                     </li>
 
                     @if(session('logged_role') === 'admin')

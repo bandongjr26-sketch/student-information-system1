@@ -35,6 +35,7 @@ Route::middleware('sessionUserMW')->group(function () {
 
     Route::middleware('sessionUserMW:admin')->group(function () {
         Route::get('/admin/dashboard', [UserController::class, 'adminDashboard'])->name('admin.dashboard');
+        Route::get('/student-accounts', [StudentController::class, 'accountIndex'])->name('student-accounts.index');
         Route::resource('students', StudentController::class);
         Route::get('/teachers/create', [UserController::class, 'createTeacher'])->name('teachers.create');
         Route::post('/teachers', [UserController::class, 'store'])->name('teachers.store');
