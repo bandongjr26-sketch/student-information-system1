@@ -151,27 +151,25 @@ class StudentController extends Controller
         'contactno.digits' => 'Contact number must be exactly 11 digits.',
     ]);
 
-   $user = UserAccounts::create([
+    DB::transaction(function () use ($validated) {
+        $user = UserAccounts::create([
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'student',
+            'must_change_password' => true,
+        ]);
 
-'username' => $validated['username'],
-        'email' => $validated['email'],
-        'password' =>Hash::make($validated['password']),
-        'role'=>'student',
-        'must_change_password' => true,
-        
-        
-
-    ]);
-    
-Student::create([
-        'user_account_id'=>$user->id,
-        'fname' => $validated['fname'],
-        'mname' => $validated['mname'] ?? null,
-        'lname' => $validated['lname'],
-        
-        'contactno' => $validated['contactno'],
-        'degree_id' => $validated['degree_id']
-    ]);
+        Student::create([
+            'user_account_id' => $user->id,
+            'fname' => $validated['fname'],
+            'mname' => $validated['mname'] ?? null,
+            'lname' => $validated['lname'],
+            'email' => $validated['email'],
+            'contactno' => $validated['contactno'],
+            'degree_id' => $validated['degree_id']
+        ]);
+    });
     
     $msg = "Student is Added";
     Log::info($msg);
@@ -237,6 +235,7 @@ Student::create([
         $student->fname = $validated['fname'];
         $student->mname = $request->filled('mname') ? $validated['mname'] : null;
         $student->lname = $validated['lname'];
+        $student->email = $validated['email'];
         $student->contactno = $validated['contactno'];
         $student->degree_id = $validated['degree_id'];
         $student->save();
