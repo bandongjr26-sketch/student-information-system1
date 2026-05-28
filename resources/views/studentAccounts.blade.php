@@ -21,31 +21,27 @@ Welcome, {{ $user }}!<br>
     </thead>
     <tbody>
         @forelse($studentAccounts as $studentAccount)
-            @php($student = $studentAccount->student)
+            @php($student = $studentAccount->student ?: ($studentsByEmail[$studentAccount->email] ?? null))
             <tr>
                 <td>{{ $studentAccount->username }}</td>
                 <td>
                     @if($student)
                         {{ collect([$student->lname, $student->mname, $student->fname])->filter()->join(', ') }}
                     @else
-                        <span class="text-muted">No student profile</span>
+                        <span class="text-muted">No student details yet</span>
                     @endif
                 </td>
-                <td>{{ $studentAccount->email ?? 'N/A' }}</td>
-                <td>{{ $student->contactno ?? 'N/A' }}</td>
-                <td>{{ $student->degree->degree_title ?? 'N/A' }}</td>
+                <td>{{ $studentAccount->email }}</td>
+                <td>{{ $student->contactno ?? 'No contact number' }}</td>
+                <td>{{ $student->degree->degree_title ?? 'No degree' }}</td>
                 <td>
-                    @if($student)
-                        <a href="{{ route('students.show', $student) }}" class="btn btn-info btn-sm me-1">View</a>
-                        <a href="{{ route('students.edit', $student) }}" class="btn btn-warning btn-sm me-1">Edit</a>
-                        <form method="POST" action="{{ route('students.destroy', $student) }}" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
-                        </form>
-                    @else
-                        <span class="text-muted">No actions available</span>
-                    @endif
+                    <a href="{{ route('student-accounts.show', $studentAccount) }}" class="btn btn-info btn-sm me-1">View</a>
+                    <a href="{{ route('student-accounts.edit', $studentAccount) }}" class="btn btn-warning btn-sm me-1">Edit</a>
+                    <form method="POST" action="{{ route('student-accounts.destroy', $studentAccount) }}" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student account?')">Delete</button>
+                    </form>
                 </td>
             </tr>
         @empty

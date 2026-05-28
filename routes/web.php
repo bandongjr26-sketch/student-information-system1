@@ -36,6 +36,10 @@ Route::middleware('sessionUserMW')->group(function () {
     Route::middleware('sessionUserMW:admin')->group(function () {
         Route::get('/admin/dashboard', [UserController::class, 'adminDashboard'])->name('admin.dashboard');
         Route::get('/student-accounts', [StudentController::class, 'accountIndex'])->name('student-accounts.index');
+        Route::get('/student-accounts/{studentAccount}', [StudentController::class, 'showAccount'])->name('student-accounts.show');
+        Route::get('/student-accounts/{studentAccount}/edit', [StudentController::class, 'editAccount'])->name('student-accounts.edit');
+        Route::put('/student-accounts/{studentAccount}', [StudentController::class, 'updateAccount'])->name('student-accounts.update');
+        Route::delete('/student-accounts/{studentAccount}', [StudentController::class, 'destroyAccount'])->name('student-accounts.destroy');
         Route::resource('students', StudentController::class);
         Route::get('/teachers/create', [UserController::class, 'createTeacher'])->name('teachers.create');
         Route::post('/teachers', [UserController::class, 'store'])->name('teachers.store');

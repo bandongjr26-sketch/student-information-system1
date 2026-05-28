@@ -48,9 +48,85 @@ class StudentController extends Controller
             ->orderBy('id', 'desc');
 
         $studentAccounts = $studentAccountsQuery->paginate(5);
+        $studentsByEmail = Student::with('degree')
+            ->whereIn('email', $studentAccounts->pluck('email')->filter())
+            ->get()
+            ->keyBy('email');
         $user = session('logged_user');
 
-        return view('studentAccounts')->with('studentAccounts', $studentAccounts)->with('user', $user);
+        return view('studentAccounts')
+            ->with('studentAccounts', $studentAccounts)
+            ->with('studentsByEmail', $studentsByEmail)
+            ->with('user', $user);
+    }
+
+    public function showAccount(UserAccounts $studentAccount)
+    {
+        abort_unless(strtolower($studentAccount->role) === 'student', 404);
+
+        return view('showStudentAccount')->with([
+            'studentAccount' => $studentAccount,
+            'student' => $this->studentForAccount($studentAccount),
+        ]);
+    }
+
+    public function editAccount(UserAccounts $studentAccount)
+    {
+        abort_unless(strtolower($studentAccount->role) === 'student', 404);
+
+        return view('editStudentAccount')->with([
+            'studentAccount' => $studentAccount,
+            'student' => $this->studentForAccount($studentAccount),
+        ]);
+    }
+
+    public function updateAccount(Request $request, UserAccounts $studentAccount)
+    {
+        abort_unless(strtolower($studentAccount->role) === 'student', 404);
+
+        $validated = $request->validate([
+            'username' => 'required|min:8|unique:user_accounts,username,' . $studentAccount->id,
+            'email' => 'required|email|unique:user_accounts,email,' . $studentAccount->id,
+            'password' => 'nullable|confirmed|min:8',
+        ]);
+
+        $student = $this->studentForAccount($studentAccount);
+
+        DB::transaction(function () use ($validated, $studentAccount, $student) {
+            $studentAccount->username = $validated['username'];
+            $studentAccount->email = $validated['email'];
+
+            if (!empty($validated['password'])) {
+                $studentAccount->password = Hash::make($validated['password']);
+            }
+
+            $studentAccount->save();
+
+            if ($student) {
+                $student->email = $validated['email'];
+                $student->user_account_id = $studentAccount->id;
+                $student->save();
+            }
+        });
+
+        return redirect()->route('student-accounts.index');
+    }
+
+    public function destroyAccount(UserAccounts $studentAccount)
+    {
+        abort_unless(strtolower($studentAccount->role) === 'student', 404);
+
+        $student = $this->studentForAccount($studentAccount);
+
+        DB::transaction(function () use ($studentAccount, $student) {
+            if ($student) {
+                $student->delete();
+            }
+
+            $studentAccount->delete();
+        });
+
+        return redirect()->route('student-accounts.index');
     }
 
     public function create()
@@ -216,6 +292,14 @@ Student::create([
         }
 
         return redirect()->route('students.index');
+    }
+
+    private function studentForAccount(UserAccounts $studentAccount): ?Student
+    {
+        return $studentAccount->student()
+            ->with('degree')
+            ->first()
+            ?: Student::with('degree')->where('email', $studentAccount->email)->first();
     }
 
 }
