@@ -32,10 +32,17 @@ class StudentController extends Controller
 
     public function index()
     {
-        $studentAccounts = UserAccounts::with(['student.degree'])
+        $studentAccountsQuery = UserAccounts::with(['student.degree'])
             ->where('role', 'student')
-            ->orderBy('id', 'desc')
-            ->paginate(5);
+            ->orderBy('id', 'desc');
+
+        if (request()->ajax()) {
+            return response()->json([
+                'studentAccounts' => $studentAccountsQuery->get()
+            ]);
+        }
+
+        $studentAccounts = $studentAccountsQuery->paginate(5);
         $user = session('logged_user');
         return view('student')->with('studentAccounts', $studentAccounts)->with('user', $user);
     }

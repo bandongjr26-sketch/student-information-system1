@@ -247,18 +247,23 @@ $(document).ready(function () {
     function renderStudentAccounts(studentAccounts) {
         const rows = studentAccounts.map(function (studentAccount) {
             const student = studentAccount.student;
-            const fullName = `${student.lname}, ${student.mname ?? ''}, ${student.fname}`;
-            const degree = student.degree?.degree_title ?? 'N/A';
-            const actions = `
+            const fullName = student
+                ? `${student.lname}, ${student.mname ?? ''}, ${student.fname}`
+                : studentAccount.username;
+            const email = studentAccount.email ?? 'N/A';
+            const contactNo = student?.contactno ?? 'N/A';
+            const degree = student?.degree?.degree_title ?? 'N/A';
+            const actions = student ? `
                         <a href="${window.studentRoutes.base}/${student.id}" class="btn btn-info btn-sm me-1">View</a>
                         <a href="${window.studentRoutes.base}/${student.id}/edit" class="btn btn-warning btn-sm me-1">Edit</a>
                         <button type="button" class="btn btn-danger btn-sm delete-student" data-id="${student.id}">Delete</button>
-                    `;
+                    ` : '<span class="text-muted">No student profile</span>';
 
             return `
                 <tr>
                     <td>${escapeHtml(fullName)}</td>
-                    <td>${escapeHtml(student.contactno)}</td>
+                    <td>${escapeHtml(email)}</td>
+                    <td>${escapeHtml(contactNo)}</td>
                     <td>${escapeHtml(degree)}</td>
                     <td>${actions}</td>
                 </tr>
@@ -266,7 +271,7 @@ $(document).ready(function () {
         });
 
         $('#student-table-body').html(
-            rows.length ? rows.join('') : '<tr><td colspan="4" class="text-center">No students found</td></tr>'
+            rows.length ? rows.join('') : '<tr><td colspan="5" class="text-center">No students found</td></tr>'
         );
 
         $('#student-list-status').text(`Last table update: ${new Date().toLocaleTimeString()}`);

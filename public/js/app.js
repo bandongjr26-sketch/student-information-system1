@@ -245,7 +245,7 @@ $(document).ready(function () {
     function loadStudents(showError = true) {
         $.get(window.studentRoutes.index)
             .done(function (response) {
-                renderStudents(response.students);
+                renderStudentAccounts(response.studentAccounts);
             })
             .fail(function () {
                 if (showError) {
@@ -254,23 +254,28 @@ $(document).ready(function () {
             });
     }
 
-    function renderStudents(students) {
-        const rows = students.map(function (student) {
-            const fullName = `${student.lname}, ${student.mname ?? ''}, ${student.fname}`;
-            const email = student.user_account?.email ?? 'N/A';
-            const degree = student.degree?.degree_title ?? 'N/A';
+    function renderStudentAccounts(studentAccounts) {
+        const rows = studentAccounts.map(function (studentAccount) {
+            const student = studentAccount.student;
+            const fullName = student
+                ? `${student.lname}, ${student.mname ?? ''}, ${student.fname}`
+                : studentAccount.username;
+            const email = studentAccount.email ?? 'N/A';
+            const contactNo = student?.contactno ?? 'N/A';
+            const degree = student?.degree?.degree_title ?? 'N/A';
+            const actions = student ? `
+                        <a href="${window.studentRoutes.base}/${student.id}" class="btn btn-info btn-sm me-1">View</a>
+                        <a href="${window.studentRoutes.base}/${student.id}/edit" class="btn btn-warning btn-sm me-1">Edit</a>
+                        <button type="button" class="btn btn-danger btn-sm delete-student" data-id="${student.id}">Delete</button>
+                    ` : '<span class="text-muted">No student profile</span>';
 
             return `
                 <tr>
                     <td>${escapeHtml(fullName)}</td>
                     <td>${escapeHtml(email)}</td>
-                    <td>${escapeHtml(student.contactno)}</td>
+                    <td>${escapeHtml(contactNo)}</td>
                     <td>${escapeHtml(degree)}</td>
-                    <td>
-                        <a href="${window.studentRoutes.base}/${student.id}" class="btn btn-info btn-sm me-1">View</a>
-                        <a href="${window.studentRoutes.base}/${student.id}/edit" class="btn btn-warning btn-sm me-1">Edit</a>
-                        <button type="button" class="btn btn-danger btn-sm delete-student" data-id="${student.id}">Delete</button>
-                    </td>
+                    <td>${actions}</td>
                 </tr>
             `;
         });

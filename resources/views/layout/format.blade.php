@@ -22,11 +22,11 @@
                         <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                     </li>
 
-                    @if(session('logged_role') === 'admin')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('students.index') }}">Student List</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('students.index') }}">Student List</a>
+                    </li>
 
+                    @if(session('logged_role') === 'admin')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('degrees.index') }}">Degrees</a>
                         </li>
